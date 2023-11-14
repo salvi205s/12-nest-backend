@@ -11,13 +11,15 @@ import { User } from './entities/user.entity';
 import { Model } from 'mongoose';
 import * as bcryptjs from 'bcryptjs';
 import { LoginDto } from './dto/login.dto';
+import { JwtService } from '@nestjs/jwt';
+import { JwtPayload } from './interfaces/jwt-payload';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectModel(User.name)
     private userModel: Model<User>,
-    // private jwtService: JwtService,
+    private jwtService: JwtService,
   ) {}
 
   // Definimos una función asincrónica llamada "create" que recibe un objeto "createUserDto" y devuelve una promesa de tipo "User"
@@ -80,7 +82,7 @@ export class AuthService {
     // Devolvemos un objeto con la información del usuario (sin la contraseña) y un token JWT
     return {
       user: rest,
-      token: 'ABC-123',
+      token:this.getJwtToken({id: user.id})
     };
   }
 
@@ -92,11 +94,16 @@ export class AuthService {
     return `This action returns a #${id} auth`;
   }
 
-  update(id: number, updateAuthDto: UpdateAuthDto) {
-    return `This action updates a #${id} auth`;
-  }
+  // update(id: number, updateAuthDto: UpdateAuthDto) {
+  //   return `This action updates a #${id} auth`;
+  // }
 
   remove(id: number) {
     return `This action removes a #${id} auth`;
+  }
+
+  getJwtToken(payload: JwtPayload) {
+    const token = this.jwtService.sign(payload);
+    return token;
   }
 }

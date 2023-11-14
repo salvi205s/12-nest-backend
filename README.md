@@ -1,3 +1,11 @@
+# Backend en Nest
+
+```
+docker compose up -d
+```
+
+Copiar el `.env.template` y renombrarlo a `.env`
+
 Archivo docker-compose.yml sirve para monar una base de datos mongodb con docker
 Para ejecutarlo (Arrancar la base de datos):
 docker compose up -d //-d la inicia tambien en docker
@@ -15,10 +23,8 @@ Para encriptar el password
 npm i --save-dev @types/bcryptjs
 ```
 
-# Backend en Nest
-
+Instala el token
 ```
-docker compose up -d
+npm install --save @nestjs/jwt
 ```
 
-Copiar el `.env.template` y renombrarlo a `.env`
