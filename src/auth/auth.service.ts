@@ -13,6 +13,8 @@ import * as bcryptjs from 'bcryptjs';
 import { LoginDto } from './dto/login.dto';
 import { JwtService } from '@nestjs/jwt';
 import { JwtPayload } from './interfaces/jwt-payload';
+import { LoginResponse } from './interfaces/login-response';
+import { RegisterUserDto } from './dto/register-user.dto';
 
 @Injectable()
 export class AuthService {
@@ -53,11 +55,23 @@ export class AuthService {
       throw new InternalServerErrorException('Something terribe happen!!!');
     }
   }
+  //----------------------------------------------------------------
+
+  async register(registerDto: RegisterUserDto) {
+    const user = await this.create(registerDto);
+
+    console.log(user);
+
+    return {
+      user: user,
+      token: this.getJwtToken({ id: user._id }),
+    };
+  }
 
   //----------------------------------------------------------------
 
   // Definimos una función asincrónica llamada "login" que recibe un objeto "loginDto" y devuelve una promesa de tipo "LoginResponse"
-  async login(loginDto: LoginDto) {
+  async login(loginDto: LoginDto): Promise<LoginResponse> {
     // Extraemos las propiedades "email" y "password" del objeto "loginDto"
     const { email, password } = loginDto;
 
@@ -82,7 +96,7 @@ export class AuthService {
     // Devolvemos un objeto con la información del usuario (sin la contraseña) y un token JWT
     return {
       user: rest,
-      token:this.getJwtToken({id: user.id})
+      token: this.getJwtToken({ id: user.id }),
     };
   }
 
@@ -90,13 +104,27 @@ export class AuthService {
     return `This action returns all auth`;
   }
 
+  //----------------------------------------------------------------
+  
+  // Definimos una función asincrónica llamada "findUserById" que recibe un identificador (id) como parámetro
+  async findUserById(id: string) {
+    // Buscamos un usuario en la base de datos utilizando el modelo "userModel" y el identificador proporcionado
+    const user = await this.userModel.findById(id);
+
+    // Extraemos la propiedad "password" del usuario y almacenamos el resto en "rest"
+    const { password, ...rest } = user.toJSON();
+
+    // Devolvemos la información del usuario sin la contraseña
+    return rest;
+  }
+
   findOne(id: number) {
     return `This action returns a #${id} auth`;
   }
 
-  // update(id: number, updateAuthDto: UpdateAuthDto) {
-  //   return `This action updates a #${id} auth`;
-  // }
+  update(id: number, updateAuthDto: UpdateAuthDto) {
+    return `This action updates a #${id} auth`;
+  }
 
   remove(id: number) {
     return `This action removes a #${id} auth`;
