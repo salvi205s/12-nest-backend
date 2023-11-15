@@ -46,7 +46,6 @@ export class AuthController {
   @Get('check-token')
   // Definimos la función controladora 'checkToken' que recibe la solicitud (req) como parámetro
   checkToken(@Request() req: Request): LoginResponse {
-    
     // Extraemos el usuario autenticado de la solicitud y lo asignamos a la variable 'user'
     const user = req['user'] as User;
 

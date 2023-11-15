@@ -6,6 +6,8 @@ async function bootstrap() {
   // Creamos una instancia de la aplicación Nest.js
   const app = await NestFactory.create(AppModule);
 
+  app.enableCors();
+
   // Configuramos el uso de tuberías (pipes) globales en la aplicación
   app.useGlobalPipes(
     new ValidationPipe({
